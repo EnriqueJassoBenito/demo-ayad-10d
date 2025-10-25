@@ -1,4 +1,4 @@
-services: 
+services:
   client:
     build:
       context: ./client
@@ -10,5 +10,4 @@ services:
 
 networks:
   demo-net:
-   external: true
-    
+    external: true
