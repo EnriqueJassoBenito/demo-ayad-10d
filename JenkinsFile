@@ -3,7 +3,7 @@ pipeline {
 
     stages {
         // Etapa para detener los contenedores de docker
-        stage{ 'Parando los servicios'
+        stage('Parando los servicios') {
             steps {
                 sh '''
                 docker compose -p demo-d down || true
@@ -11,8 +11,8 @@ pipeline {
             }
         }
 
-        // Etapas para eliminar las iamgenes viejas
-        stage{ 'Eliminando imagenes anteriores'
+        // Etapa para eliminar las imágenes viejas
+        stage('Eliminando imagenes anteriores') {
             steps {
                 sh '''
                 IMAGES=$(docker images --filter "label=com.docker.compose.project=demo-d" -q)
@@ -24,33 +24,34 @@ pipeline {
                 '''
             }
         }
-        // Etapa para bajar la actualizacion del repo
-        stage{ 'Bajando la actualizacion del repo'
+
+        // Etapa para bajar la actualización del repo
+        stage('Bajando la actualizacion del repo') {
             steps {
                 checkout scm
             }
         }
 
         // Etapa para construir y desplegar
-        stage('Costruyendo y desplegando') {
-                steps {
-                    sh '''
-                        docker compose up --build -d
-                    '''
-                }
+        stage('Construyendo y desplegando') {
+            steps {
+                sh '''
+                docker compose up --build -d
+                '''
+            }
         }
+    }
 
-        // Post actions
-        post {
-            success {
-                echo 'Pipeline completado exitosamente.'
-            }
-            failure {
-                echo 'Ocurrio un error durante la ejecucion del pipeline.'
-            }
-            always {
-                echo 'Ejecucion del Pipeline finalizado.'
-            }
+    // Post actions
+    post {
+        success {
+            echo 'Pipeline completado exitosamente.'
+        }
+        failure {
+            echo 'Ocurrió un error durante la ejecución del pipeline.'
+        }
+        always {
+            echo 'Ejecución del Pipeline finalizado.'
         }
     }
 }
